@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="RE:CORD — Discover albums, artists, and critical reviews."
+  >
+
+  <title>RE:CORD | Music Discovery</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="site-header">
+
+    <a href="#" class="logo">
+      RE:<span>CORD</span>
+    </a>
+
+    <nav>
+      <a href="#discover">Discover</a>
+      <a href="#albums">Albums</a>
+      <a href="#about">About</a>
+    </nav>
+
+  </header>
+
+
+  <main>
+
+    <!-- =========================
+         HERO
+    ========================== -->
+
+    <section class="hero" id="discover">
+
+      <p class="eyebrow">
+        MUSIC • REVIEWS • DISCOVERY
+      </p>
+
+      <h1>
+        FIND YOUR<br>
+        NEXT <span>RECORD.</span>
+      </h1>
+
+      <p class="hero-text">
+        Search artists and albums, explore their discographies,
+        and see what major music publications had to say.
+      </p>
+
+
+      <!-- SEARCH -->
+
+      <div class="search-container">
+
+        <input
+          type="text"
+          id="album-search"
+          placeholder="Search artist or album..."
+          autocomplete="off"
+        >
+
+        <button id="search-button">
+          SEARCH
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         FEATURED ALBUMS
+    ========================== -->
+
+    <section class="albums-section" id="albums">
+
+      <div class="section-heading">
+
+        <div>
+          <p class="eyebrow">
+            01 / FEATURED
+          </p>
+
+          <h2>
+            IN ROTATION<span>.</span>
+          </h2>
+        </div>
+
+        <p class="album-count">
+          06 RECORDS
+        </p>
+
+      </div>
+
+
+      <!--
+        JavaScript will generate the album cards
+        inside this container.
+      -->
+
+      <div
+        class="album-grid"
+        id="album-grid"
+      ></div>
+
+    </section>
+
+
+    <!-- =========================
+         ABOUT
+    ========================== -->
+
+    <section class="about-section" id="about">
+
+      <p class="eyebrow">
+        02 / ABOUT
+      </p>
+
+      <div class="about-grid">
+
+        <h2>
+          MUSIC THROUGH<br>
+          THE <span>CRITICS.</span>
+        </h2>
+
+        <div class="about-copy">
+
+          <p>
+            RE:CORD is a music discovery project designed around
+            albums, artists, and critical reception.
+          </p>
+
+          <p>
+            Search an artist's discography, explore album information,
+            and compare reviews from major music publications in one place.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer>
+
+    <a href="#" class="footer-logo">
+      RE:CORD
+    </a>
+
+    <p>
+      MUSIC DISCOVERY & CRITICAL REVIEWS
+    </p>
+
+  </footer>
+
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
