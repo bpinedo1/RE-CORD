@@ -17,163 +17,407 @@
 
 <body>
 
-  <!-- =========================
-       HEADER
-  ========================== -->
+  <!-- ========================================
+       MASTHEAD
+  ========================================= -->
 
   <header class="site-header">
 
-    <a href="#" class="logo">
-      RE:<span>CORD</span>
-    </a>
+    <div class="header-top">
 
-    <nav>
-      <a href="#discover">Discover</a>
-      <a href="#albums">Albums</a>
+        <div class="header-stamp" aria-hidden="true">
+            <span class="stamp-brand">RE:CORD</span>
+            <span class="stamp-archive">ARCHIVE 001</span>
+            <span class="stamp-line"></span>
+            <span>EST. 2026</span>
+            <span>EL PASO, TX</span>
+        </div>
+
+  <a href="index.html" class="logo">
+    RE:CORD
+  </a>
+
+  <div class="header-vinyl" aria-hidden="true">
+    <img src="assets/record.png" alt="">
+  </div>
+
+    </div>
+
+    <nav class="main-nav">
+      <a href="#featured">Featured</a>
+      <a href="#shuffle">Shuffle</a>
+      <a href="#search">Search</a>
       <a href="#about">About</a>
     </nav>
 
   </header>
 
 
-  <main>
+  <main id="home-content">    
 
-    <!-- =========================
-         HERO
-    ========================== -->
+  <!-- ========================================
+     FEATURED ALBUM
+========================================= -->
 
-    <section class="hero" id="discover">
+<section class="featured" id="featured">
 
-      <p class="eyebrow">
-        MUSIC • REVIEWS • DISCOVERY
+  <div class="featured-label">
+
+    <div class="featured-index">
+
+      <span class="featured-number">
+        01
+      </span>
+
+      <div>
+        <span class="featured-type">
+          RE:CORD SELECT
+        </span>
+
+        <span class="featured-catalog">
+          CAT. NO. 001
+        </span>
+      </div>
+
+    </div>
+
+    <span class="featured-status">
+      FEATURED RECORD
+    </span>
+
+  </div>
+
+
+  <div class="featured-layout">
+
+    <!-- Album Artwork -->
+
+    <div class="featured-artwork">
+
+      <div class="record-sleeve">
+
+        <img
+          class="featured-vinyl"
+          src="assets/record.png"
+          alt=""
+          aria-hidden="true"
+        >
+
+        <div class="artwork-placeholder featured-cover">
+
+  <img
+    src="https://coverartarchive.org/release-group/48117b90-a16e-34ca-a514-19c702df1158/front-1200"
+    alt="Discovery by Daft Punk"
+    class="featured-cover-image"
+  >
+
+  <div class="catalog-sticker">
+    <span>RE:CORD</span>
+    <strong>001</strong>
+  </div>
+
+</div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Album Information -->
+
+    <div class="featured-content">
+
+      <p class="featured-artist">
+        Daft Punk
       </p>
 
       <h1>
-        FIND YOUR<br>
-        NEXT <span>RECORD.</span>
+        Discovery
       </h1>
 
-      <p class="hero-text">
-        Search artists and albums, explore their discographies,
-        and see what major music publications had to say.
+      <div class="featured-meta">
+        <span>Album</span>
+        <span>2001</span>
+      </div>
+
+      <p class="featured-description">
+        Explore Daft Punk's landmark second studio album
+        and its critical reception across major music
+        publications.
       </p>
 
+      <button
+        type="button"
+        class="text-link featured-album-link"
+        data-id="48117b90-a16e-34ca-a514-19c702df1158"
+      >
+        Explore album
+        <span>→</span>
+      </button>
 
-      <!-- SEARCH -->
+    </div>
+
+  </div>
+
+</section>
+
+
+    <!-- ========================================
+         SHUFFLE
+    ========================================= -->
+
+    <section class="shuffle-section" id="shuffle">
+
+      <div class="shuffle-intro">
+
+        <p class="shuffle-label">
+          RE:CORD Shuffle
+        </p>
+
+        <h2>
+          Don't know what<br>
+          to listen to?
+        </h2>
+
+        <p class="shuffle-description">
+          Leave it up to chance. Shuffle the collection
+          and discover an album you might have missed.
+        </p>
+
+        <button class="shuffle-button" id="shuffle-button">
+          <span class="shuffle-icon">↝</span>
+          Find an album
+        </button>
+
+      </div>
+
+
+      <!-- Random album result -->
+
+ <div class="shuffle-result" id="shuffle-result">
+
+  <div class="shuffle-crate">
+
+    <img
+      src="assets/record-crate.png"
+      class="shuffle-crate-image"
+      alt="RE:CORD crate filled with vinyl records"
+    >
+
+  </div>
+
+  </div>
+
+  </section>
+
+    <!-- ========================================
+         SEARCH
+    ========================================= -->
+
+    <section class="discover" id="search">
+
+  <div class="discover-content">
+
+    <div class="discover-heading">
+
+      <div class="discover-heading-main">
+
+        <p class="discover-label">
+          Find a record
+        </p>
+
+        <h2>
+          Looking for<br>
+          something specific?
+        </h2>
+
+      </div>
+
+
+      <div class="discover-note" aria-hidden="true">
+
+        <span class="discover-note-title">
+          CATALOG SEARCH
+        </span>
+
+        <span class="discover-note-line"></span>
+
+        <span>ARTIST / ALBUM</span>
+        <span>EST. 2026</span>
+
+      </div>
+
+    </div>
+
+
+    <div class="search-area">
+
+      <div class="search-instruction">
+        <span>SEARCH THE ARCHIVE</span>
+        <span>ENTER ARTIST OR ALBUM</span>
+      </div>
+
 
       <div class="search-container">
 
         <input
           type="text"
           id="album-search"
-          placeholder="Search artist or album..."
+          placeholder="Artist or album..."
           autocomplete="off"
+          aria-label="Search by artist or album"
         >
 
-        <button id="search-button">
-          SEARCH
+        <button id="search-submit">
+          Search <span aria-hidden="true">→</span>
         </button>
 
       </div>
 
-    </section>
 
+      <div class="search-footnote">
 
-    <!-- =========================
-         FEATURED ALBUMS
-    ========================== -->
+        <span>
+          MUSIC DISCOVERY / CATALOG LOOKUP
+        </span>
 
-    <section class="albums-section" id="albums">
-
-      <div class="section-heading">
-
-        <div>
-          <p class="eyebrow">
-            01 / FEATURED
-          </p>
-
-          <h2>
-            IN ROTATION<span>.</span>
-          </h2>
-        </div>
-
-        <p class="album-count">
-          06 RECORDS
-        </p>
+        <span>
+          RE:CORD
+        </span>
 
       </div>
 
-
-      <!--
-        JavaScript will generate the album cards
-        inside this container.
-      -->
-
-      <div
-        class="album-grid"
-        id="album-grid"
-      ></div>
-
-    </section>
+    </div>
 
 
-    <!-- =========================
+    <div
+      class="search-results"
+      id="search-results"
+      aria-live="polite"
+    ></div>
+
+  </div>
+
+</section>
+
+
+    <!-- ========================================
          ABOUT
-    ========================== -->
+    ========================================= -->
 
-    <section class="about-section" id="about">
+    <section class="about" id="about">
 
-      <p class="eyebrow">
-        02 / ABOUT
+  <div class="about-header">
+
+    <p class="about-label">
+      About RE:CORD
+    </p>
+
+    <span class="about-mark" aria-hidden="true">
+      RE:
+    </span>
+
+  </div>
+
+
+  <div class="about-main">
+
+    <h2>
+      Music discovery<br>
+      without the endless<br>
+      scrolling.
+    </h2>
+
+
+    <div class="about-copy">
+
+      <p class="about-intro">
+        Find the record.
+        Hear the record.
+        Know the record.
       </p>
 
-      <div class="about-grid">
+      <p>
+        RE:CORD is a music discovery project centered
+        around albums, artists, and critical reception.
+        Explore a featured record, search the archive,
+        or leave your next listen up to chance.
+      </p>
 
-        <h2>
-          MUSIC THROUGH<br>
-          THE <span>CRITICS.</span>
-        </h2>
+    </div>
 
-        <div class="about-copy">
-
-          <p>
-            RE:CORD is a music discovery project designed around
-            albums, artists, and critical reception.
-          </p>
-
-          <p>
-            Search an artist's discography, explore album information,
-            and compare reviews from major music publications in one place.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
+  </div>
 
 
-  <!-- =========================
+  <div class="about-principles">
+
+    <div>
+      <span>01</span>
+      <strong>DISCOVER</strong>
+      <p>Find something you haven't heard.</p>
+    </div>
+
+    <div>
+      <span>02</span>
+      <strong>EXPLORE</strong>
+      <p>Dig deeper into the record.</p>
+    </div>
+
+    <div>
+      <span>03</span>
+      <strong>LISTEN</strong>
+      <p>Spend less time choosing.</p>
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+  <!-- ========================================
        FOOTER
-  ========================== -->
+  ========================================= -->
 
-  <footer>
+  <footer class="site-footer">
 
-    <a href="#" class="footer-logo">
+  <div class="footer-top">
+
+    <a href="#featured" class="footer-logo">
       RE:CORD
     </a>
 
-    <p>
-      MUSIC DISCOVERY & CRITICAL REVIEWS
-    </p>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="#featured">Featured</a>
+      <a href="#shuffle">Shuffle</a>
+      <a href="#search">Search</a>
+      <a href="#about">About</a>
+    </nav>
 
-  </footer>
+  </div>
 
 
+  <div class="footer-bottom">
+
+    <div class="footer-description">
+      <p>Music discovery & critical reviews.</p>
+      <p>Built by Bryan Pinedo-Cruz.</p>
+    </div>
+
+    <div class="footer-colophon">
+      <span>RE:CORD ARCHIVE</span>
+      <span>EST. 2026</span>
+      <span>EL PASO, TX</span>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  <script src="reviews.js"></script>
   <script src="script.js"></script>
 
 </body>
-
 </html>
