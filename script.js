@@ -2240,6 +2240,32 @@ function resetHomePage() {
 }
 
 /* =========================================
+   FEATURED NAV LINK
+========================================= */
+
+const featuredNavLink =
+  document.getElementById(
+    "featured-nav-link"
+  );
+
+if (featuredNavLink) {
+
+  featuredNavLink.addEventListener(
+    "click",
+    function(event) {
+
+      event.preventDefault();
+
+      openAlbum(
+        "48117b90-a16e-34ca-a514-19c702df1158"
+      );
+
+    }
+  );
+
+}
+
+/* =========================================
    FEATURED ALBUM
 ========================================= */
 
