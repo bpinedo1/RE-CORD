@@ -2293,7 +2293,7 @@ async function openAlbum(
 
     const groupURL =
       `https://musicbrainz.org/ws/2/release-group/${releaseGroupId}` +
-      `?inc=artist-credits+releases+genres&fmt=json`;
+      `?inc=artist-credits+releases+genres+url-rels&fmt=json`;
 
 
     const groupResponse =
@@ -2578,12 +2578,60 @@ function buildCriticalReception(
 
 
   /*
-    No reviews have been curated yet.
+    CURATED RE:CORD REVIEWS
+
+    Discovery, Silent Alarm, and AM
+    currently use this archive.
   */
 
   if (
-    reviews.length === 0
+    reviews.length > 0
   ) {
+
+    const reviewHTML =
+      reviews.map(
+        (review) => `
+
+          <article class="critic-review">
+
+            <div class="critic-review-header">
+
+              <span class="critic-publication">
+                ${escapeHTML(
+                  review.publication
+                )}
+              </span>
+
+              <span class="critic-score">
+                ${escapeHTML(
+                  review.score
+                )}
+              </span>
+
+            </div>
+
+
+            <p class="critic-summary">
+              ${escapeHTML(
+                review.summary
+              )}
+            </p>
+
+
+            <a
+              class="critic-link"
+              href="${review.url}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Read review →
+            </a>
+
+          </article>
+
+        `
+      ).join("");
+
 
     return `
 
@@ -2601,16 +2649,7 @@ function buildCriticalReception(
 
         </div>
 
-
-        <div class="critical-empty">
-
-          <p>
-            Critical reviews for this record
-            haven't been added to the
-            RE:CORD archive yet.
-          </p>
-
-        </div>
+        ${reviewHTML}
 
       </section>
 
@@ -2620,57 +2659,17 @@ function buildCriticalReception(
 
 
   /*
-    Build our curated review entries.
+    NO CURATED REVIEW
+
+    Create a loading area for CritiqueBrainz.
   */
-
-  const reviewHTML =
-    reviews.map(
-      (review) => `
-
-        <article class="critic-review">
-
-          <div class="critic-review-header">
-
-            <span class="critic-publication">
-              ${escapeHTML(
-                review.publication
-              )}
-            </span>
-
-            <span class="critic-score">
-              ${escapeHTML(
-                review.score
-              )}
-            </span>
-
-          </div>
-
-
-          <p class="critic-summary">
-            ${escapeHTML(
-              review.summary
-            )}
-          </p>
-
-
-          <a
-            class="critic-link"
-            href="${review.url}"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read review →
-          </a>
-
-        </article>
-
-      `
-    ).join("");
-
 
   return `
 
-    <section class="critical-reception">
+    <section
+      class="critical-reception"
+      id="critical-reception-${releaseGroupId}"
+    >
 
       <div class="critical-heading">
 
@@ -2684,9 +2683,556 @@ function buildCriticalReception(
 
       </div>
 
-      ${reviewHTML}
+
+      <div class="critical-empty">
+
+        <p>
+          Checking the review archive...
+        </p>
+
+      </div>
 
     </section>
+
+  `;
+
+}
+
+/* =========================================
+   LOAD ALBUM RECEPTION
+========================================= */
+
+async function loadCritiqueBrainzReviews(
+  releaseGroupId,
+  relations = []
+) {
+
+  /*
+    1. Curated RE:CORD reviews always win.
+  */
+
+  if (
+    criticalReviews[
+      releaseGroupId
+    ]?.length
+  ) {
+
+    return;
+
+  }
+
+
+  const container =
+    document.getElementById(
+      `critical-reception-${releaseGroupId}`
+    );
+
+
+  if (!container) {
+
+    return;
+
+  }
+
+
+  /*
+    2. Check MusicBrainz for explicitly
+       classified professional review links.
+  */
+
+  const professionalReviews =
+    relations.filter(
+      (relation) =>
+        relation.type === "review" &&
+        relation.url?.resource
+    );
+
+
+  if (
+    professionalReviews.length > 0
+  ) {
+
+    displayMusicBrainzReviewLinks(
+      container,
+      professionalReviews
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Save an AllMusic relationship in case
+    neither professional review links nor
+    CritiqueBrainz reviews are available.
+  */
+
+  const allMusicRelation =
+    relations.find(
+      (relation) =>
+        relation.type === "allmusic" &&
+        relation.url?.resource
+    );
+
+
+  /*
+    3. No professional review relationship.
+       Try CritiqueBrainz community reviews.
+  */
+
+  try {
+
+    const url =
+      "https://critiquebrainz.org/ws/1/review/" +
+      "?entity_type=release_group" +
+      "&entity_id=" +
+      encodeURIComponent(
+        releaseGroupId
+      ) +
+      "&limit=3";
+
+
+    const response =
+      await fetch(url);
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        `CritiqueBrainz request failed: ${response.status}`
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    const reviews =
+      data.reviews || [];
+
+
+    if (
+      reviews.length > 0
+    ) {
+
+      displayCritiqueBrainzReviews(
+        container,
+        reviews
+      );
+
+      return;
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.warn(
+      "RE:CORD CritiqueBrainz error:",
+      error
+    );
+
+  }
+
+
+  /*
+    4. CritiqueBrainz also had nothing.
+       Fall back to AllMusic when available.
+  */
+
+  if (allMusicRelation) {
+
+    displayAllMusicLink(
+      container,
+      allMusicRelation.url.resource
+    );
+
+    return;
+
+  }
+
+
+  /*
+    5. Nothing was found anywhere.
+  */
+
+  displayNoCritiqueBrainzReviews(
+    container
+  );
+
+}
+
+/* =========================================
+   DISPLAY CRITIQUEBRAINZ REVIEWS
+========================================= */
+
+function displayCritiqueBrainzReviews(
+  container,
+  reviews
+) {
+
+  const reviewHTML =
+    reviews.map(
+      (review) => {
+
+        const reviewer =
+          review.user?.display_name ||
+          review.user?.username ||
+          "CritiqueBrainz User";
+
+
+        const rating =
+          review.rating
+            ? `${review.rating} / 5`
+            : "Review";
+
+
+        const text =
+          review.text ||
+          "No written review available.";
+
+
+        const reviewURL =
+          review.id
+            ? `https://critiquebrainz.org/review/${review.id}`
+            : "https://critiquebrainz.org/";
+
+
+        return `
+
+          <article class="critic-review">
+
+            <div class="critic-review-header">
+
+              <span class="critic-publication">
+                ${escapeHTML(reviewer)}
+              </span>
+
+              <span class="critic-score">
+                ${escapeHTML(rating)}
+              </span>
+
+            </div>
+
+
+            <p class="critic-summary">
+              ${escapeHTML(text)}
+            </p>
+
+
+            <a
+              class="critic-link"
+              href="${reviewURL}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View on CritiqueBrainz →
+            </a>
+
+          </article>
+
+        `;
+
+      }
+    ).join("");
+
+
+  container.innerHTML = `
+
+    <div class="critical-heading">
+
+      <span class="critical-kicker">
+        CritiqueBrainz
+      </span>
+
+      <h3>
+        Community Reception
+      </h3>
+
+    </div>
+
+    ${reviewHTML}
+
+  `;
+
+}
+
+/* =========================================
+   MUSICBRAINZ PROFESSIONAL REVIEWS
+========================================= */
+
+function displayMusicBrainzReviewLinks(
+  container,
+  reviewRelations
+) {
+
+  const reviewHTML =
+    reviewRelations.map(
+      (relation) => {
+
+        const url =
+          relation.url.resource;
+
+
+        let publication =
+          "External Review";
+
+
+        try {
+
+          const hostname =
+            new URL(url)
+              .hostname
+              .replace(
+                /^www\./,
+                ""
+              );
+
+
+          if (
+            hostname.includes(
+              "metacritic.com"
+            )
+          ) {
+
+            publication =
+              "Metacritic";
+
+          }
+
+          else if (
+            hostname.includes(
+              "pitchfork.com"
+            )
+          ) {
+
+            publication =
+              "Pitchfork";
+
+          }
+
+          else if (
+            hostname.includes(
+              "allmusic.com"
+            )
+          ) {
+
+            publication =
+              "AllMusic";
+
+          }
+
+          else if (
+            hostname.includes(
+              "nme.com"
+            )
+          ) {
+
+            publication =
+              "NME";
+
+          }
+
+          else if (
+            hostname.includes(
+              "rollingstone.com"
+            )
+          ) {
+
+            publication =
+              "Rolling Stone";
+
+          }
+
+          else if (
+            hostname.includes(
+              "bbc.co.uk"
+            ) ||
+            hostname.includes(
+              "bbc.com"
+            )
+          ) {
+
+            publication =
+              "BBC";
+
+          }
+
+          else {
+
+            publication =
+              hostname;
+
+          }
+
+        }
+
+        catch (error) {
+
+          console.warn(
+            "RE:CORD couldn't identify review source:",
+            url
+          );
+
+        }
+
+
+        return `
+
+          <article class="critic-review">
+
+            <div class="critic-review-header">
+
+              <span class="critic-publication">
+                ${escapeHTML(
+                  publication
+                )}
+              </span>
+
+              <span class="critic-score">
+                Review
+              </span>
+
+            </div>
+
+
+            <p class="critic-summary">
+              Professional review linked through
+              the MusicBrainz archive.
+            </p>
+
+
+            <a
+              class="critic-link"
+              href="${escapeHTML(url)}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Read review →
+            </a>
+
+          </article>
+
+        `;
+
+      }
+    ).join("");
+
+
+  container.innerHTML = `
+
+    <div class="critical-heading">
+
+      <span class="critical-kicker">
+        RE:CORD Archive
+      </span>
+
+      <h3>
+        Critical Reception
+      </h3>
+
+    </div>
+
+    ${reviewHTML}
+
+  `;
+
+}
+
+/* =========================================
+   ALLMUSIC FALLBACK
+========================================= */
+
+function displayAllMusicLink(
+  container,
+  url
+) {
+
+  container.innerHTML = `
+
+    <div class="critical-heading">
+
+      <span class="critical-kicker">
+        RE:CORD Archive
+      </span>
+
+      <h3>
+        Critical Reception
+      </h3>
+
+    </div>
+
+
+    <article class="critic-review">
+
+      <div class="critic-review-header">
+
+        <span class="critic-publication">
+          AllMusic
+        </span>
+
+        <span class="critic-score">
+          Album Page
+        </span>
+
+      </div>
+
+
+      <p class="critic-summary">
+        Explore album information and available
+        critical coverage on AllMusic.
+      </p>
+
+
+      <a
+        class="critic-link"
+        href="${escapeHTML(url)}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        View on AllMusic →
+      </a>
+
+    </article>
+
+  `;
+
+}
+
+/* =========================================
+   NO CRITIQUEBRAINZ REVIEWS
+========================================= */
+
+function displayNoCritiqueBrainzReviews(
+  container
+) {
+
+  container.innerHTML = `
+
+    <div class="critical-heading">
+
+      <span class="critical-kicker">
+        RE:CORD Archive
+      </span>
+
+      <h3>
+        Critical Reception
+      </h3>
+
+    </div>
+
+
+    <div class="critical-empty">
+
+      <p>
+        No reviews were found for this record.
+      </p>
+
+    </div>
 
   `;
 
@@ -2705,7 +3251,7 @@ function displayAlbumDetail(
         "RE:CORD release group:",
         group.title,
         group.id
-    );    
+    );
     
   const title =
     group.title ||
@@ -2964,6 +3510,16 @@ function displayAlbumDetail(
     </div>
 
   `;
+
+  /*
+  Load CritiqueBrainz after the album
+  page has been inserted into the DOM.
+*/
+
+loadCritiqueBrainzReviews(
+  group.id,
+  group.relations || []
+);
 
 
   document
