@@ -86,6 +86,16 @@ const shuffleButton =
 const shuffleResult =
   document.getElementById("shuffle-result");
 
+const shuffleGenreFilter =
+  document.getElementById(
+    "shuffle-genre"
+  );
+
+const shuffleDecadeFilter =
+  document.getElementById(
+    "shuffle-decade"
+  );
+
 const searchInput =
   document.getElementById("album-search");
 
@@ -300,16 +310,52 @@ async function shuffleAlbum() {
         Randomly choose a genre and decade.
       */
 
-      const genre =
-        randomItem(
-          shuffleGenres
-        );
+      /* -----------------------------------------
+   APPLY SHUFFLE FILTERS
+----------------------------------------- */
+
+const selectedGenre =
+  shuffleGenreFilter?.value ||
+  "any";
+
+const selectedDecade =
+  shuffleDecadeFilter?.value ||
+  "any";
 
 
-      const decade =
-        randomItem(
-          shuffleDecades
-        );
+/*
+  If the visitor selected a genre,
+  use it.
+
+  Otherwise preserve the original
+  random Shuffle behavior.
+*/
+
+const genre =
+  selectedGenre !== "any"
+    ? selectedGenre
+    : randomItem(
+        shuffleGenres
+      );
+
+
+/*
+  Find the selected decade object.
+
+  If "Any decade" is selected,
+  preserve the original random behavior.
+*/
+
+const decade =
+  selectedDecade !== "any"
+    ? shuffleDecades.find(
+        (item) =>
+          item.label ===
+          selectedDecade
+      )
+    : randomItem(
+        shuffleDecades
+      );
 
 
       /*
