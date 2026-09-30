@@ -55,8 +55,8 @@
 
   <main id="home-content">    
 
-  <!-- ========================================
-     FEATURED ALBUM
+ <!-- ========================================
+     FEATURED CATALOGUE
 ========================================= -->
 
 <section class="featured" id="featured">
@@ -65,19 +65,78 @@
 
     <div class="featured-index">
 
-      <span class="featured-number">
+      <span
+        class="featured-number"
+        id="featured-number"
+      >
         01
       </span>
 
-      <div>
-        <span class="featured-type">
-          RE:CORD SELECT
-        </span>
+      <div class="featured-heading-info">
 
-        <span class="featured-catalog">
-          CAT. NO. 001
-        </span>
-      </div>
+  <span class="featured-type">
+    RE:CORD SELECT
+  </span>
+
+  <div
+    class="featured-catalog-tabs"
+    role="tablist"
+    aria-label="Featured record catalogue"
+  >
+
+    <button
+      type="button"
+      class="featured-catalog-tab active"
+      data-index="0"
+      role="tab"
+      aria-selected="true"
+    >
+      001
+    </button>
+
+    <button
+      type="button"
+      class="featured-catalog-tab"
+      data-index="1"
+      role="tab"
+      aria-selected="false"
+    >
+      002
+    </button>
+
+    <button
+      type="button"
+      class="featured-catalog-tab"
+      data-index="2"
+      role="tab"
+      aria-selected="false"
+    >
+      003
+    </button>
+
+    <button
+      type="button"
+      class="featured-catalog-tab"
+      data-index="3"
+      role="tab"
+      aria-selected="false"
+    >
+      004
+    </button>
+
+    <button
+      type="button"
+      class="featured-catalog-tab"
+      data-index="4"
+      role="tab"
+      aria-selected="false"
+    >
+      005
+    </button>
+
+  </div>
+
+</div>
 
     </div>
 
@@ -88,7 +147,12 @@
   </div>
 
 
-  <div class="featured-layout">
+  <!-- Catalogue Page -->
+
+  <div
+    class="featured-layout"
+    id="featured-catalogue-page"
+  >
 
     <!-- Album Artwork -->
 
@@ -105,18 +169,22 @@
 
         <div class="artwork-placeholder featured-cover">
 
-  <img
-    src="https://coverartarchive.org/release-group/48117b90-a16e-34ca-a514-19c702df1158/front-1200"
-    alt="Discovery by Daft Punk"
-    class="featured-cover-image"
-  >
+          <img
+            id="featured-cover-image"
+            src="https://coverartarchive.org/release-group/48117b90-a16e-34ca-a514-19c702df1158/front-1200"
+            alt="Discovery by Daft Punk"
+            class="featured-cover-image"
+          >
 
-  <div class="catalog-sticker">
-    <span>RE:CORD</span>
-    <strong>001</strong>
-  </div>
+          <div class="catalog-sticker">
+            <span>RE:CORD</span>
 
-</div>
+            <strong id="featured-sticker-number">
+              001
+            </strong>
+          </div>
+
+        </div>
 
       </div>
 
@@ -127,20 +195,31 @@
 
     <div class="featured-content">
 
-      <p class="featured-artist">
+      <p
+        class="featured-artist"
+        id="featured-artist"
+      >
         Daft Punk
       </p>
 
-      <h1>
+      <h1 id="featured-title">
         Discovery
       </h1>
 
       <div class="featured-meta">
+
         <span>Album</span>
-        <span>2001</span>
+
+        <span id="featured-year">
+          2001
+        </span>
+
       </div>
 
-      <p class="featured-description">
+      <p
+        class="featured-description"
+        id="featured-description"
+      >
         Explore Daft Punk's landmark second studio album
         and its critical reception across major music
         publications.
@@ -149,6 +228,7 @@
       <button
         type="button"
         class="text-link featured-album-link"
+        id="featured-album-link"
         data-id="48117b90-a16e-34ca-a514-19c702df1158"
       >
         Explore album
@@ -156,6 +236,52 @@
       </button>
 
     </div>
+
+  </div>
+
+
+  <!-- Catalogue Navigation -->
+
+  <div class="featured-catalogue-nav">
+
+    <button
+      type="button"
+      class="catalogue-nav-button"
+      id="featured-previous"
+      aria-label="Previous featured record"
+    >
+      <span>←</span>
+      Previous
+    </button>
+
+
+    <div
+      class="catalogue-position"
+      aria-live="polite"
+    >
+      <span id="catalogue-current">
+        01
+      </span>
+
+      <span class="catalogue-divider">
+        /
+      </span>
+
+      <span>
+        05
+      </span>
+    </div>
+
+
+    <button
+      type="button"
+      class="catalogue-nav-button"
+      id="featured-next"
+      aria-label="Next featured record"
+    >
+      Next
+      <span>→</span>
+    </button>
 
   </div>
 

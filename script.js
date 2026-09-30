@@ -2312,6 +2312,387 @@ if (featuredNavLink) {
 }
 
 /* =========================================
+   FEATURED CATALOGUE DATA
+========================================= */
+
+const featuredRecords = [
+
+  {
+    catalog: "001",
+    number: "01",
+    artist: "Daft Punk",
+    title: "Discovery",
+    year: "2001",
+
+    description:
+      "Explore Daft Punk's landmark second studio album and its critical reception across major music publications.",
+
+    id:
+      "48117b90-a16e-34ca-a514-19c702df1158"
+  },
+
+
+  {
+    catalog: "002",
+    number: "02",
+    artist: "Bloc Party",
+    title: "Silent Alarm",
+    year: "2005",
+
+    description:
+      "Explore Bloc Party's explosive debut album, a defining record of the mid-2000s indie rock revival.",
+
+    id:
+      "f3f82b80-b2c5-3151-be53-5cb5803860e0"
+  },
+
+
+  {
+    catalog: "003",
+    number: "03",
+    artist: "Arctic Monkeys",
+    title: "AM",
+    year: "2013",
+
+    description:
+      "Explore Arctic Monkeys' fifth studio album, blending indie rock, blues, psychedelia, and late-night grooves.",
+
+    id:
+      "a348ba2f-f8b3-4686-b928-e63d8d94d543"
+    },
+
+
+  {
+    catalog: "004",
+    number: "04",
+    artist: "Queens of the Stone Age",
+    title: "...Like Clockwork",
+    year: "2013",
+
+    description:
+      "Explore Queens of the Stone Age's dark and atmospheric sixth studio album and its critical reception.",
+
+    id:
+      "c92f73ee-527f-42ed-a556-fd615941e214"
+  },
+
+
+  {
+    catalog: "005",
+    number: "05",
+    artist: "cleopatrick",
+    title: "BUMMER",
+    year: "2021",
+
+    description:
+      "Explore cleopatrick's debut album, a raw and heavy modern rock record built around distorted guitars and stripped-back production.",
+
+    id:
+      "ec316a0f-fa23-4a2f-b934-e906d0ed3e75"
+  }
+
+];
+
+/* =========================================
+   PRELOAD FEATURED ALBUM COVERS
+========================================= */
+
+featuredRecords.forEach(
+  function(record) {
+
+    const image =
+      new Image();
+
+    image.src =
+      `https://coverartarchive.org/release-group/${record.id}/front-1200`;
+
+  }
+);
+
+
+/* =========================================
+   FEATURED CATALOGUE DISPLAY
+========================================= */
+
+const featuredNumber =
+  document.getElementById(
+    "featured-number"
+  );
+
+const featuredCoverImage =
+  document.getElementById(
+    "featured-cover-image"
+  );
+
+const featuredStickerNumber =
+  document.getElementById(
+    "featured-sticker-number"
+  );
+
+const featuredArtist =
+  document.getElementById(
+    "featured-artist"
+  );
+
+const featuredTitle =
+  document.getElementById(
+    "featured-title"
+  );
+
+const featuredYear =
+  document.getElementById(
+    "featured-year"
+  );
+
+const featuredDescription =
+  document.getElementById(
+    "featured-description"
+  );
+
+const catalogueCurrent =
+  document.getElementById(
+    "catalogue-current"
+  );
+
+const featuredCatalogTabs =
+  document.querySelectorAll(
+    ".featured-catalog-tab"
+  );
+
+
+let currentFeaturedIndex = 0;
+
+
+/* =========================================
+   DISPLAY FEATURED RECORD
+========================================= */
+
+function displayFeaturedRecord(index) {
+
+  const featuredSection =
+    document.getElementById(
+      "featured"
+    );
+
+  const record =
+    featuredRecords[index];
+
+  if (!record) {
+    return;
+  }
+
+
+  /* Fade out current record */
+
+  featuredSection.classList.add(
+    "featured-record-changing"
+  );
+
+
+  /*
+    Wait for the fade-out before
+    replacing the record information.
+  */
+
+  setTimeout(
+    function() {
+
+
+      currentFeaturedIndex =
+        index;
+
+
+      /* Main catalogue number */
+
+      featuredNumber.textContent =
+        record.number;
+
+
+      /* Album cover */
+
+      featuredCoverImage.src =
+        `https://coverartarchive.org/release-group/${record.id}/front-1200`;
+
+      featuredCoverImage.alt =
+        `${record.title} by ${record.artist}`;
+
+
+      /* Sticker */
+
+      featuredStickerNumber.textContent =
+        record.catalog;
+
+
+      /* Album information */
+
+      featuredArtist.textContent =
+        record.artist;
+
+      featuredTitle.textContent =
+        record.title;
+
+      featuredYear.textContent =
+        record.year;
+
+      featuredDescription.textContent =
+        record.description;
+
+
+      /* Bottom 01 / 05 counter */
+
+      catalogueCurrent.textContent =
+        record.number;
+
+
+      /* Update Explore Album */
+
+      featuredAlbumLink.dataset.id =
+        record.id;
+
+
+      /* Update active catalogue tab */
+
+      featuredCatalogTabs.forEach(
+        (tab, tabIndex) => {
+
+          const active =
+            tabIndex === index;
+
+          tab.classList.toggle(
+            "active",
+            active
+          );
+
+          tab.setAttribute(
+            "aria-selected",
+            active
+              ? "true"
+              : "false"
+          );
+
+        }
+      );
+
+
+      /* Fade new record back in */
+
+      featuredSection.classList.remove(
+        "featured-record-changing"
+      );
+
+
+    },
+    220
+  );
+
+}
+
+
+/* =========================================
+   FEATURED CATALOGUE TABS
+========================================= */
+
+featuredCatalogTabs.forEach(
+  (tab) => {
+
+    tab.addEventListener(
+      "click",
+      function() {
+
+        const index =
+          Number(
+            tab.dataset.index
+          );
+
+        displayFeaturedRecord(
+          index
+        );
+
+      }
+    );
+
+  }
+);
+
+/* =========================================
+   FEATURED PREVIOUS / NEXT
+========================================= */
+
+const featuredPrevious =
+  document.getElementById(
+    "featured-previous"
+  );
+
+const featuredNext =
+  document.getElementById(
+    "featured-next"
+  );
+
+
+/* Previous record */
+
+featuredPrevious.addEventListener(
+  "click",
+  function() {
+
+    let previousIndex =
+      currentFeaturedIndex - 1;
+
+
+    /*
+      Wrap from the first record
+      back to the last record.
+    */
+
+    if (previousIndex < 0) {
+
+      previousIndex =
+        featuredRecords.length - 1;
+
+    }
+
+
+    displayFeaturedRecord(
+      previousIndex
+    );
+
+  }
+);
+
+
+/* Next record */
+
+featuredNext.addEventListener(
+  "click",
+  function() {
+
+    let nextIndex =
+      currentFeaturedIndex + 1;
+
+
+    /*
+      Wrap from the last record
+      back to the first record.
+    */
+
+    if (
+      nextIndex >=
+      featuredRecords.length
+    ) {
+
+      nextIndex = 0;
+
+    }
+
+
+    displayFeaturedRecord(
+      nextIndex
+    );
+
+  }
+);
+
+/* =========================================
    FEATURED ALBUM
 ========================================= */
 
