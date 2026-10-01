@@ -3732,6 +3732,26 @@ function displayAlbumDetail(
   const coverURL =
     `https://coverartarchive.org/release-group/${group.id}/front-1200`;
 
+    /* -----------------------------------------
+   LISTENING LINKS
+----------------------------------------- */
+
+const listenQuery =
+  encodeURIComponent(
+    `${artist} ${title}`
+  );
+
+
+const spotifyURL =
+  `https://open.spotify.com/search/${listenQuery}`;
+
+
+const appleMusicURL =
+  `https://music.apple.com/us/search?term=${listenQuery}`;
+
+
+const youtubeMusicURL =
+  `https://music.youtube.com/search?q=${listenQuery}`;
 
   /* -----------------------------------------
      GENRES
@@ -3927,6 +3947,82 @@ function displayAlbumDetail(
             </span>
 
           </div>
+
+          <!-- LISTEN -->
+
+        <div class="album-listen">
+
+            <span class="album-listen-label">
+            Listen
+            </span>
+
+           <div class="album-listen-links">
+
+  <a
+    href="${spotifyURL}"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Listen on Spotify"
+    title="Spotify"
+  >
+    <img
+      src="assets/spotify.svg"
+      alt=""
+      class="listen-icon listen-icon-default"
+    >
+
+    <img
+      src="assets/spotify-color.svg"
+      alt=""
+      class="listen-icon listen-icon-color"
+    >
+  </a>
+
+
+  <a
+    href="${appleMusicURL}"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Listen on Apple Music"
+    title="Apple Music"
+  >
+    <img
+      src="assets/apple-music.svg"
+      alt=""
+      class="listen-icon listen-icon-default"
+    >
+
+    <img
+      src="assets/apple-music-color.svg"
+      alt=""
+      class="listen-icon listen-icon-color"
+    >
+  </a>
+
+
+  <a
+    href="${youtubeMusicURL}"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Listen on YouTube Music"
+    title="YouTube Music"
+  >
+    <img
+      src="assets/youtube-music.svg"
+      alt=""
+      class="listen-icon listen-icon-default"
+    >
+
+    <img
+      src="assets/youtube-music-color.svg"
+      alt=""
+      class="listen-icon listen-icon-color"
+    >
+  </a>
+
+</div>
+
+        </div>
 
 
           <div class="tracklist">

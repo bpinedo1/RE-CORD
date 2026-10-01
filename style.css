@@ -3032,68 +3032,73 @@ input {
 
 
 /* =========================================
-   RE:CORD — RECORD STORE STICKER
+   RE:CORD CATALOG STICKER
 ========================================= */
 
 .catalog-sticker {
   position: absolute;
 
-  right: 18px;
-  bottom: 18px;
+  right: 14px;
+  bottom: 14px;
 
-  width: 76px;
-  min-height: 66px;
+  width: 56px;
+  padding: 6px 7px;
 
-  padding: 8px 9px;
+  background:
+    linear-gradient(
+      135deg,
+      #f3f0e6 0%,
+      #ebe6d8 55%,
+      #f1ede2 100%
+    );
 
-  background: #eee9dc;
   color: #111;
 
-  border: 1px solid rgba(17, 17, 17, 0.8);
+  border: 1px solid rgba(17, 17, 17, 0.6);
 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 
-  font-family: "Special Elite", monospace;
+  font-family: "Courier New", Courier, monospace;
 
-  transform: rotate(-2deg);
+  transform: none;
 
   box-shadow:
-    2px 3px 4px rgba(17, 17, 17, 0.16);
+    1px 2px 3px rgba(17, 17, 17, 0.12);
 }
 
 
-/* Small RE:CORD branding */
+/* RE:CORD */
 
 .catalog-sticker span {
   color: #111;
 
-  font-family: "Special Elite", monospace;
-  font-size: 0.55rem;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 0.45rem;
+  font-weight: 700;
 
   line-height: 1;
+  letter-spacing: 0.08em;
 
-  letter-spacing: 0.05em;
+  opacity: 0.65;
 
-  opacity: 0.8;
+  transform: none !important;
+  font-style: normal;
 }
 
 
-/* Large catalogue number */
+/* Catalogue number */
 
 .catalog-sticker strong {
   color: #111;
 
-  font-family: "Special Elite", monospace;
-  font-size: 1.65rem;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1rem;
   font-weight: 400;
 
-  line-height: 0.9;
+  line-height: 1;
 
-  letter-spacing: -0.04em;
-
-  margin-top: 9px;
+  margin-top: 5px;
 }
 
 
@@ -3652,4 +3657,159 @@ input {
     transition: none;
   }
 
+}
+
+/* =========================================
+   ALBUM LISTEN LINKS
+========================================= */
+
+.album-listen {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-top: 18px;
+  padding-bottom: 18px;
+
+  border-bottom: 1px solid rgba(17, 17, 17, 0.35);
+}
+
+
+.album-listen-label {
+  flex-shrink: 0;
+
+  font-size: 0.62rem;
+  font-weight: 700;
+
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  opacity: 0.55;
+}
+
+
+.album-listen-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+
+  gap: 10px 22px;
+}
+
+
+.album-listen-links a {
+  color: #111;
+
+  font-size: 0.68rem;
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  text-decoration: none;
+
+  border-bottom: 1px solid transparent;
+
+  transition:
+    opacity 0.2s ease,
+    border-color 0.2s ease;
+}
+
+
+.album-listen-links a:hover {
+  opacity: 0.55;
+  border-color: #111;
+}
+
+
+/* =========================================
+   ALBUM LISTEN — MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .album-listen {
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+
+  .album-listen-links {
+    justify-content: flex-start;
+
+    gap: 10px 18px;
+  }
+
+}
+
+/* =========================================
+   LISTEN SERVICE ICONS
+========================================= */
+
+.album-listen-links a {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 38px;
+
+  border: 0;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.2s ease;
+}
+
+
+.listen-icon {
+  position: absolute;
+
+  width: 30px;
+  height: 30px;
+
+  object-fit: contain;
+
+  transition:
+    opacity 0.2s ease;
+}
+
+
+/* Black version */
+
+.listen-icon-default {
+  opacity: 1;
+}
+
+
+/* Colored version */
+
+.listen-icon-color {
+  opacity: 0;
+}
+
+
+/* Hover */
+
+.album-listen-links a:hover {
+  transform: translateY(-2px);
+}
+
+
+.album-listen-links a:hover
+.listen-icon-default {
+  opacity: 0;
+}
+
+
+.album-listen-links a:hover
+.listen-icon-color {
+  opacity: 1;
 }
