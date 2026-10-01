@@ -2724,8 +2724,37 @@ if (featuredAlbumLink) {
 ========================================= */
 
 async function openAlbum(
-  releaseGroupId
+  releaseGroupId,
+  updateHistory = true
 ) {
+
+  /* -----------------------------------------
+     UPDATE ALBUM URL
+  ----------------------------------------- */
+
+  const albumURL =
+    new URL(
+      window.location.href
+    );
+
+  albumURL.searchParams.set(
+    "album",
+    releaseGroupId
+  );
+
+  if (updateHistory) {
+
+  window.history.pushState(
+    {
+      album:
+        releaseGroupId
+    },
+    "",
+    albumURL
+  );
+
+}
+
 
   showAlbumPage();
 
@@ -3715,6 +3744,10 @@ function displayAlbumDetail(
     group["artist-credit"]?.[0]?.name ||
     "Unknown Artist";
 
+   const artistId =
+    group["artist-credit"]?.[0]?.artist?.id ||
+    null; 
+
 
   const releaseDate =
     group["first-release-date"] || "";
@@ -4056,14 +4089,38 @@ const youtubeMusicURL =
 
       </div>
 
+      <!-- KEEP DIGGING -->
+
+      <section
+        class="keep-digging"
+        id="keep-digging"
+      >
+      </section>
+
     </div>
 
   `;
+
+  /* -----------------------------------------
+   LOAD KEEP DIGGING
+----------------------------------------- */
+
+if (artistId) {
+
+  displayKeepDigging(
+    artistId,
+    group.id,
+    artist
+  );
+
+}
 
   /*
   Load CritiqueBrainz after the album
   page has been inserted into the DOM.
 */
+
+
 
 loadCritiqueBrainzReviews(
   group.id,
@@ -4078,6 +4135,29 @@ loadCritiqueBrainzReviews(
   .addEventListener(
     "click",
     function() {
+
+      /* -----------------------------------------
+         RETURN TO DISCOVERY
+      ----------------------------------------- */
+
+      const homeURL =
+        new URL(
+          window.location.href
+        );
+
+      homeURL.searchParams.delete(
+        "album"
+      );
+
+
+      window.history.pushState(
+        {
+          album: null
+        },
+        "",
+        homeURL
+      );
+
 
       resetHomePage();
 
@@ -4094,6 +4174,303 @@ loadCritiqueBrainzReviews(
     .scrollIntoView({
       behavior: "smooth"
     });
+
+}
+
+/* =========================================
+   KEEP DIGGING — SAME ARTIST
+========================================= */
+
+async function getKeepDiggingRecords(
+  artistId,
+  currentAlbumId
+) {
+
+  if (!artistId) {
+    return [];
+  }
+
+
+  const url =
+    `https://musicbrainz.org/ws/2/release-group` +
+    `?artist=${artistId}` +
+    `&type=album` +
+    `&limit=100` +
+    `&fmt=json`;
+
+
+  try {
+
+    const response =
+      await musicBrainzFetch(
+        url
+      );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        `Keep Digging request failed: ${response.status}`
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    const records =
+  (data["release-groups"] || [])
+
+    /* Remove the album currently open */
+
+    .filter(
+      (record) =>
+        record.id !== currentAlbumId
+    )
+
+    /* Only keep standard albums */
+
+    .filter(
+      (record) =>
+        isStandardAlbum(
+          record
+        )
+    )
+
+    /* Only keep records with useful data */
+
+    .filter(
+      (record) =>
+        record.id &&
+        record.title &&
+        record["first-release-date"]
+    )
+
+    /* Remove duplicate release groups */
+
+    .filter(
+      (record, index, array) =>
+        array.findIndex(
+          (item) =>
+            item.id === record.id
+        ) === index
+    )
+
+    /* Put albums in chronological order */
+
+    .sort(
+          (a, b) => {
+
+            const yearA =
+              parseInt(
+                a["first-release-date"]?.substring(0, 4),
+                10
+              ) || 9999;
+
+            const yearB =
+              parseInt(
+                b["first-release-date"]?.substring(0, 4),
+                10
+              ) || 9999;
+
+            return yearA - yearB;
+
+          }
+        );
+
+
+    return records;
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "RE:CORD Keep Digging error:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+/* =========================================
+   DISPLAY KEEP DIGGING
+========================================= */
+
+async function displayKeepDigging(
+  artistId,
+  currentAlbumId,
+  artistName
+) {
+
+  const container =
+    document.getElementById(
+      "keep-digging"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  const records =
+    await getKeepDiggingRecords(
+      artistId,
+      currentAlbumId
+    );
+
+
+  /*
+    Don't display the section when
+    no other albums are available.
+  */
+
+  if (records.length === 0) {
+
+    container.style.display =
+      "none";
+
+    return;
+
+  }
+
+
+  /*
+    Keep the page focused by showing
+    three records at a time.
+  */
+
+  const selectedRecords =
+    records.slice(
+      0,
+      3
+    );
+
+
+  const recordHTML =
+    selectedRecords.map(
+      (record) => {
+
+        const year =
+          record["first-release-date"]
+            ? record[
+                "first-release-date"
+              ].substring(
+                0,
+                4
+              )
+            : "—";
+
+
+        const coverURL =
+          `https://coverartarchive.org/release-group/${record.id}/front-500`;
+
+
+        return `
+
+          <article class="keep-digging-record">
+
+            <button
+              class="keep-digging-cover"
+              data-id="${record.id}"
+              aria-label="Explore ${escapeHTML(record.title)}"
+            >
+
+              <img
+                src="${coverURL}"
+                alt="${escapeHTML(record.title)} by ${escapeHTML(artistName)}"
+                loading="lazy"
+              >
+
+              <div class="keep-digging-fallback">
+                <span>RE:CORD</span>
+              </div>
+
+            </button>
+
+
+            <div class="keep-digging-info">
+
+              <span class="keep-digging-year">
+                ${escapeHTML(year)}
+              </span>
+
+              <h4>
+                ${escapeHTML(record.title)}
+              </h4>
+
+              <button
+                class="keep-digging-link"
+                data-id="${record.id}"
+              >
+                Explore Record →
+              </button>
+
+            </div>
+
+          </article>
+
+        `;
+
+      }
+    ).join("");
+
+
+  container.innerHTML = `
+
+    <div class="keep-digging-heading">
+
+      <span>
+        Keep Digging
+      </span>
+
+      <h3>
+        More from ${escapeHTML(artistName)}
+      </h3>
+
+    </div>
+
+
+    <div class="keep-digging-grid">
+
+      ${recordHTML}
+
+    </div>
+
+  `;
+
+
+  /*
+    Open these records using the same
+    album system as Search and Shuffle.
+  */
+
+  container
+    .querySelectorAll(
+      "[data-id]"
+    )
+    .forEach(
+      (button) => {
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            openAlbum(
+              button.dataset.id
+            );
+
+          }
+        );
+
+      }
+    );
 
 }
 
@@ -4136,3 +4513,76 @@ function formatTrackLength(
 
     }
 }
+
+/* =========================================
+   OPEN ALBUM FROM SHARED URL
+========================================= */
+
+const initialURL =
+  new URL(
+    window.location.href
+  );
+
+const initialAlbumId =
+  initialURL.searchParams.get(
+    "album"
+  );
+
+
+if (initialAlbumId) {
+
+  openAlbum(
+    initialAlbumId,
+    false
+  );
+
+}
+
+/* =========================================
+   BROWSER BACK / FORWARD NAVIGATION
+========================================= */
+
+window.addEventListener(
+  "popstate",
+  function() {
+
+    const currentURL =
+      new URL(
+        window.location.href
+      );
+
+    const albumId =
+      currentURL.searchParams.get(
+        "album"
+      );
+
+
+    /*
+      If the URL contains an album,
+      open it without creating another
+      browser-history entry.
+    */
+
+    if (albumId) {
+
+      openAlbum(
+        albumId,
+        false
+      );
+
+      return;
+
+    }
+
+
+    /*
+      No album in the URL means we've
+      returned to the RE:CORD homepage.
+    */
+
+    resetHomePage();
+
+    showHomePage();
+
+  }
+);
